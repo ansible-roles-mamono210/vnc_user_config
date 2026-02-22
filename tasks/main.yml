@@ -1,25 +1,23 @@
 ---
+- name: Validate vnc_password is provided (do not bake into image)
+  ansible.builtin.assert:
+    that:
+      - vnc_password is defined
+      - (vnc_password | string | length) > 0
+    fail_msg: "vnc_password is required. Provide it via Vault or runtime vars."
+  no_log: true
+
 - name: Derive display number and TCP port
   ansible.builtin.set_fact:
     vnc_display_num: "{{ vnc_display | regex_replace('^:', '') | int }}"
     vnc_tcp_port: "{{ 5900 + (vnc_display | regex_replace('^:', '') | int) }}"
 
-- name: Install GUI group (Server with GUI)
-  ansible.builtin.dnf:
-    name: "@Server with GUI"
-    state: present
-
-- name: Install TigerVNC server packages
-  ansible.builtin.dnf:
-    name:
-      - tigervnc-server
-    state: present
-
-- name: Ensure VNC user exists
+- name: Ensure VNC user exists (optional)
   ansible.builtin.user:
     name: "{{ vnc_user }}"
     state: present
     create_home: true
+  when: vnc_manage_user | bool
 
 - name: Ensure ~/.vnc directory exists
   ansible.builtin.file:
@@ -40,9 +38,6 @@
       depth={{ vnc_depth }}
       # 必要なら localhost 限定（SSHトンネル前提）にする:
       # localhost
-      # セキュリティ向け（要件により調整）:
-      # AlwaysShared=1
-      # DisconnectClients=0
 
 - name: Create ~/.vnc/xstartup (launch desktop session)
   ansible.builtin.copy:
@@ -94,3 +89,4 @@
     name: "vncserver@{{ vnc_display }}.service"
     enabled: true
     state: started
+  when: vnc_manage_service | bool

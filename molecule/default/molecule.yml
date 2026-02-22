@@ -37,6 +37,7 @@ provisioner:
       roles_path: "$HOME/.ansible/roles/:$HOME"
   connection_options:
     ansible_user: ${ANSIBLE_USER}
+    vnc_display: ":1"
   log: true
 verifier:
   name: ansible
@@ -47,6 +48,9 @@ scenario:
     - destroy
     - syntax
     - create
+    - prepare
     - converge
+    - idempotence
+    - verify
     - cleanup
     - destroy

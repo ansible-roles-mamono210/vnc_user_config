@@ -6,4 +6,4 @@
   tasks:
     - name: Execute
       ansible.builtin.include_role:
-        name: vnc_server
+        name: vnc_user_config

@@ -3,11 +3,11 @@ dependencies: []
 galaxy_info:
   author: mamono210
   company: no name
-  description: VNC Server installation for Linux.
+  description: Configure per-user VNC settings and start service (run after boot)
   galaxy_tags: []
   license: "license (BSD, MIT)"
   min_ansible_version: 13.0.0
-  role_name: vnc_server
+  role_name: vnc_user_config
   platforms:
     - name: EL
       release:

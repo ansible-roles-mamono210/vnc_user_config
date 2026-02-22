@@ -15,7 +15,10 @@ jobs:
       - ansible-lint/execute:
           molecule-role-test: true
   molecule-ec2:
-    executor: molecule-ec2/default
+    executor:
+      name: molecule-ec2/default
+      image: ghcr.io/docker-images-mamono210/circleci-executors/molecule-default:latest
+      resource_class: small
     parameters:
       ansible-user:
         type: string
@@ -33,7 +36,7 @@ jobs:
         type: string
       molecule-scenario-name:
         type: string
-    working_directory: ~/vnc_server
+    working_directory: ~/vnc_user_config
     steps:
       - checkout
       - aws-cli/setup:
@@ -78,10 +81,10 @@ workflows:
             - yamllint
       - molecule-ec2:
           ansible-user: ec2-user
-          aws-ami-name: centos-stream9-1*
+          aws-ami-name: vnc-server_golden-image_centos-stream9*
           aws-ami-owner-id: '808683561341'
-          aws-instance-type: t2.micro
-          aws-resource-name: ansible_roles_vnc_server
+          aws-instance-type: t2.medium
+          aws-resource-name: ansible_roles_vnc_user_config
           aws-vpc-subnet-id: subnet-022a704b3061b8b39
           circleci-timeout: 60m
           molecule-scenario-name: default

@@ -1,7 +1,24 @@
 ---
-vnc_depth: "24"
-vnc_display: ":1"
-vnc_geometry: "1920x1080"
-vnc_password: "ChangeMe_Strong!"
-vnc_session_command: "/usr/bin/gnome-session"
+# Target user (Assumed to exist after VM startup)
 vnc_user: "ec2-user"
+
+# VNC display (Format: ":1")
+vnc_display: ":1"
+
+# Screen settings
+vnc_geometry: "1280x800"
+vnc_depth: "24"
+
+# Session to start (Change according to the environment)
+# Example: GNOME
+vnc_session_command: "gnome-session"
+
+# Password for vncpasswd (To be injected via Vault, etc.)
+# Do not set a value in defaults. Required in the playbook.
+vnc_password: "vncpassword"
+
+# Whether to create the user within the role if they do not exist (Recommended: false)
+vnc_manage_user: false
+
+# Whether to enable/start the service (Intended to remain true in the playbook after startup)
+vnc_manage_service: true
